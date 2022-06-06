@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <meta name="description" content="todo app with vue">
+    <meta name="author" content="Nina Janson">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1 id="title">TODO APP</h1>
+    </header>
+    <div id="app">
+
+        <section id="add-todo-section">
+            <input type="text" id="new-todo" placeholder="new Todo" v-model="newTask" @keypress.enter="addNewTodo">
+            <button class="add-button" @click="addNewTodo">Add</button>
+        </section>
+        <section id="filter-section">
+            <input class="radio-button" v-model="listOfSelectedTodos" type="radio" value="all" name="filter" value="all"
+                checked><label for="all">All
+                Todos</label>
+            <input class="radio-button" v-model="listOfSelectedTodos" type="radio" value="open" name="filter"> <label
+                for="open">Open
+                Todos</label>
+            <input class="radio-button" v-model="listOfSelectedTodos" type="radio" value="done" name="filter"> <label
+                for="done">Done
+                Todos</label>
+        </section>
+        <button class="remove-button" @click="removeDoneTodos">Remove done todos</button>
+        <section class="search-secion">
+            <p>Search for a specific todo:</p>
+            <input type="text" id="searchInputField" v-model="searchValue">
+        </section>
+        <section class="todo-list-section"></section>
+        <p v-if="this.todos.length === 0">Well done! You don't have any todos!</p>
+        <h2 v-else>Your Todos:</h2>
+        <ul class="todo-list">
+            <li class="list-items" v-for="(todo, index) in todoList" :class="{'task-done': todo.done}"> <a href="#"></a>
+                <label class="checkbox-label">
+                    <input class="checkbox" type="checkbox" @change="updateDoneStatus(index)" :checked="todo.done">
+                    {{ todo.task }}
+                </label>
+            </li>
+        </ul>
+
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
