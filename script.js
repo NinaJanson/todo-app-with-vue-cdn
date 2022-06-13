@@ -9,44 +9,47 @@ Vue.createApp({
   },
   methods: {
     async fetchTodos() {
-      const response = await fetch("http://localhost:3000/todos");
+      const response = await fetch("http://localhost:4730/todos");
       this.todos = await response.json();
     },
     async addNewTodo() {
-      const newTaskData = {
-        task: this.newTask,
-        done: false,
-      };
       if (this.newTask.length > 0) {
-        this.todos.push(newTaskData);
+        const newTaskData = {
+          task: this.newTask,
+          done: false,
+        };
 
-        const response = await fetch("http://localhost:3000/todos", {
+        const response = await fetch("http://localhost:4730/todos", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(newTaskData),
         });
-        this.todos = await response.json();
+        const newTodoFromApi = await response.json();
+        this.todos.push(newTodoFromApi);
 
         this.newTask = "";
       }
     },
 
     async updateDoneStatus(index) {
-      this.todos[index].done = !this.todos[index].done;
+      // this.todos[index].done = !this.todos[index].done;
+      let todoUpdate = this.todos[index];
+      todoUpdate.done = !todoUpdate.done;
 
       const response = await fetch(
-        "http://localhost:3000/todos/" + this.todos[index].id,
+        "http://localhost:4730/todos/" + this.todos[index].id,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.todos[index]),
+          body: JSON.stringify(todoUpdate),
         }
       );
-      this.todos = await response.json();
+      // this.todos = await response.json();
+      const updatedTodo = await response.json();
     },
 
     async removeDoneTodos() {
@@ -64,13 +67,22 @@ Vue.createApp({
       });
     },
     */
-      this.todos.forEach((todo) => {
+      this.todos.forEach(async (todo) => {
         if (todo.done) {
-          const response = fetch("http://localhost:3000/todos/" + todo.id, {
-            method: "DELETE",
-          });
+          const response = await fetch(
+            "http://localhost:4730/todos/" + todo.id,
+            {
+              method: "DELETE",
+            }
+          );
+          await response.json();
         }
       });
+
+      //this.todos = this.todos.filter((todo) => !todo.done);
+      this.fetchTodos();
+
+      // this.todos
     },
   },
 
